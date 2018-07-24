@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import net.mm2d.android.upnp.cds.CdsObject;
+import net.mm2d.android.upnp.cds.PropertyParser;
 import net.mm2d.android.upnp.cds.Tag;
 import net.mm2d.dmsexplorer.domain.formatter.CdsFormatter;
 import net.mm2d.dmsexplorer.util.StringJoiner;
@@ -54,7 +55,7 @@ public class CdsContentEntity implements ContentEntity {
         }
         mUri = Uri.parse(mSelectedRes.getValue());
         final String protocolInfo = mSelectedRes.getAttribute(CdsObject.PROTOCOL_INFO);
-        mMimeType = CdsObject.extractMimeTypeFromProtocolInfo(protocolInfo);
+        mMimeType = PropertyParser.extractMimeTypeFromProtocolInfo(protocolInfo);
     }
 
     @NonNull

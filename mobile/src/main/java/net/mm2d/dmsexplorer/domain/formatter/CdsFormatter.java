@@ -208,7 +208,10 @@ public class CdsFormatter {
     @Nullable
     public static String makeDate(@NonNull final CdsObject cdsObject) {
         final String str = cdsObject.getValue(CdsObject.DC_DATE);
-        final Date date = CdsObject.parseDate(str);
+        if (str == null) {
+            return null;
+        }
+        final Date date = cdsObject.parseDate(str);
         if (date == null) {
             return null;
         }

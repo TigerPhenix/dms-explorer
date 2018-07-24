@@ -7,35 +7,29 @@
 
 package net.mm2d.android.upnp.cds;
 
-import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * ContentDirectoryServiceのObjectを表現するクラス。
+ * ContentDirectoryServiceのObjectを表現するインターフェース。
  *
  * @author <a href="mailto:ryo@mm2d.net">大前良介 (OHMAE Ryosuke)</a>
  */
-public class CdsObject implements Parcelable {
+public interface CdsObject extends Parcelable {
     // XML関係の定義
 
-    public static final String DIDL_LITE = "DIDL-Lite";
+    String DIDL_LITE = "DIDL-Lite";
     /**
      * "item".
      *
@@ -44,7 +38,7 @@ public class CdsObject implements Parcelable {
      * Items may be playable, meaning they have information that can be played on a rendering device.
      * Any object which derives from the item class is expressed via the DIDL-Lite item structure.
      */
-    public static final String ITEM = "item";
+    String ITEM = "item";
     /**
      * "container".
      *
@@ -60,7 +54,7 @@ public class CdsObject implements Parcelable {
      * This value is maintained internally, does not appear in any XML expression of the container,
      * and cannot be used in a search or sort criterion.
      */
-    public static final String CONTAINER = "container";
+    String CONTAINER = "container";
     /**
      * "@id".
      *
@@ -69,7 +63,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: string
      */
-    public static final String ID = "@id";
+    String ID = "@id";
     /**
      * "@parentID".
      *
@@ -79,7 +73,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: string
      */
-    public static final String PARENT_ID = "@parentID";
+    String PARENT_ID = "@parentID";
     /**
      * "@restricted".
      *
@@ -88,7 +82,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: boolean
      */
-    public static final String RESTRICTED = "@restricted";
+    String RESTRICTED = "@restricted";
     /**
      * "@childCount".
      *
@@ -97,7 +91,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: integer
      */
-    public static final String CHILD_COUNT = "@childCount";
+    String CHILD_COUNT = "@childCount";
     /**
      * "@searchable".
      *
@@ -107,7 +101,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: boolean
      */
-    public static final String SEARCHABLE = "@searchable";
+    String SEARCHABLE = "@searchable";
     /**
      * "dc:title".
      *
@@ -120,7 +114,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: Dublin Core / Type: string
      */
-    public static final String DC_TITLE = "dc:title";
+    String DC_TITLE = "dc:title";
     /**
      * "dc:date".
      *
@@ -128,7 +122,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: Dublin Core / Type: string
      */
-    public static final String DC_DATE = "dc:date";
+    String DC_DATE = "dc:date";
     /**
      * "dc:creator".
      *
@@ -136,7 +130,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: Dublin Core / Type: string
      */
-    public static final String DC_CREATOR = "dc:creator";
+    String DC_CREATOR = "dc:creator";
     /**
      * "dc:description".
      *
@@ -149,7 +143,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: Dublin Core / Type: string
      */
-    public static final String DC_DESCRIPTION = "dc:description";
+    String DC_DESCRIPTION = "dc:description";
     /**
      * "upnp:longDescription".
      *
@@ -158,28 +152,28 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_LONG_DESCRIPTION = "upnp:longDescription";
+    String UPNP_LONG_DESCRIPTION = "upnp:longDescription";
     /**
      * "object.item.imageItem".
      *
      * <p>upnp:class value.
      * represents a piece of content that, when rendered, generates some still image.
      */
-    public static final String IMAGE_ITEM = "object.item.imageItem";
+    String IMAGE_ITEM = "object.item.imageItem";
     /**
      * "object.item.audioItem".
      *
      * <p>upnp:class value.
      * represents a piece of content that, when rendered, generates some audio.
      */
-    public static final String AUDIO_ITEM = "object.item.audioItem";
+    String AUDIO_ITEM = "object.item.audioItem";
     /**
      * "object.item.videoItem".
      *
      * <p>upnp:class value.
      * represents a piece of content that, when rendered, generates some video.
      */
-    public static final String VIDEO_ITEM = "object.item.videoItem";
+    String VIDEO_ITEM = "object.item.videoItem";
     /**
      * "upnp:class".
      *
@@ -187,7 +181,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_CLASS = "upnp:class";
+    String UPNP_CLASS = "upnp:class";
     /**
      * "upnp:genre".
      *
@@ -203,7 +197,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_GENRE = "upnp:genre";
+    String UPNP_GENRE = "upnp:genre";
     /**
      * "upnp:actor".
      *
@@ -211,7 +205,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string, not standardized by the Content Directory Service.
      */
-    public static final String UPNP_ACTOR = "upnp:actor";
+    String UPNP_ACTOR = "upnp:actor";
     /**
      * "upnp:actor@role".
      *
@@ -219,7 +213,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_ACTOR_ROLE = "upnp:actor@role";
+    String UPNP_ACTOR_ROLE = "upnp:actor@role";
     /**
      * "upnp:artist".
      *
@@ -227,7 +221,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_ARTIST = "upnp:artist";
+    String UPNP_ARTIST = "upnp:artist";
     /**
      * "upnp:artist@role".
      *
@@ -235,7 +229,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_ARTIST_ROLE = "upnp:artist@role";
+    String UPNP_ARTIST_ROLE = "upnp:artist@role";
     /**
      * "upnp:author".
      *
@@ -243,7 +237,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_AUTHOR = "upnp:author";
+    String UPNP_AUTHOR = "upnp:author";
     /**
      * "upnp:author@role".
      *
@@ -251,7 +245,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_AUTHOR_ROLE = "upnp:author@role";
+    String UPNP_AUTHOR_ROLE = "upnp:author@role";
     /**
      * "upnp:producer".
      *
@@ -259,7 +253,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_PRODUCER = "upnp:producer";
+    String UPNP_PRODUCER = "upnp:producer";
     /**
      * "upnp:director".
      *
@@ -267,7 +261,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_DIRECTOR = "upnp:director";
+    String UPNP_DIRECTOR = "upnp:director";
     /**
      * "dc:publisher".
      *
@@ -277,7 +271,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: Dublin Core / Type: string
      */
-    public static final String DC_PUBLISHER = "dc:publisher";
+    String DC_PUBLISHER = "dc:publisher";
     /**
      * "dc:contributor".
      *
@@ -287,7 +281,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: Dublin Core / Type: string
      */
-    public static final String DC_CONTRIBUTOR = "dc:contributor";
+    String DC_CONTRIBUTOR = "dc:contributor";
 
     /**
      * "upnp:album".
@@ -296,7 +290,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_ALBUM = "upnp:album";
+    String UPNP_ALBUM = "upnp:album";
     /**
      * "upnp:albumArtURI".
      *
@@ -305,7 +299,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: URI
      */
-    public static final String UPNP_ALBUM_ART_URI = "upnp:albumArtURI";
+    String UPNP_ALBUM_ART_URI = "upnp:albumArtURI";
     /**
      * "upnp:channelName".
      *
@@ -319,7 +313,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string, not standardized by the Content Directory Service.
      */
-    public static final String UPNP_CHANNEL_NAME = "upnp:channelName";
+    String UPNP_CHANNEL_NAME = "upnp:channelName";
     /**
      * "upnp:channelNr".
      *
@@ -338,7 +332,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: integer
      */
-    public static final String UPNP_CHANNEL_NR = "upnp:channelNr";
+    String UPNP_CHANNEL_NR = "upnp:channelNr";
     /**
      * "upnp:scheduledStartTime".
      *
@@ -359,7 +353,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_SCHEDULED_START_TIME = "upnp:scheduledStartTime";
+    String UPNP_SCHEDULED_START_TIME = "upnp:scheduledStartTime";
     /**
      * "upnp:scheduledEndTime".
      *
@@ -382,7 +376,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string
      */
-    public static final String UPNP_SCHEDULED_END_TIME = "upnp:scheduledEndTime";
+    String UPNP_SCHEDULED_END_TIME = "upnp:scheduledEndTime";
     /**
      * "upnp:icon".
      *
@@ -396,7 +390,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: URI
      */
-    public static final String UPNP_ICON = "upnp:icon";
+    String UPNP_ICON = "upnp:icon";
     /**
      * "upnp:icon@arib:resolution".
      *
@@ -410,7 +404,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: pattern string
      */
-    public static final String UPNP_ICON_ARIB_RESOLUTION = "upnp:icon@arib:resolution";
+    String UPNP_ICON_ARIB_RESOLUTION = "upnp:icon@arib:resolution";
     /**
      * "upnp:rating".
      *
@@ -425,7 +419,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: UPnP / Type: string, not standardized by the Content Directory Service.
      */
-    public static final String UPNP_RATING = "upnp:rating";
+    String UPNP_RATING = "upnp:rating";
     /**
      * "res".
      *
@@ -434,7 +428,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: URI
      */
-    public static final String RES = "res";
+    String RES = "res";
     /**
      * "res@size".
      *
@@ -442,13 +436,13 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: unsigned long
      */
-    public static final String RES_SIZE = "res@size";
+    String RES_SIZE = "res@size";
     /**
      * "size".
      *
      * @see #RES_SIZE
      */
-    public static final String SIZE = "size";
+    String SIZE = "size";
     /**
      * "res@duration".
      *
@@ -469,13 +463,13 @@ public class CdsObject implements Parcelable {
      * and the decimal point itself may be omitted if there are no fractional second digits.
      * <pre>
      */
-    public static final String RES_DURATION = "res@duration";
+    String RES_DURATION = "res@duration";
     /**
      * "duration".
      *
      * @see #RES_DURATION
      */
-    public static final String DURATION = "duration";
+    String DURATION = "duration";
     /**
      * "res@resolution".
      *
@@ -490,13 +484,13 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: pattern string
      */
-    public static final String RES_RESOLUTION = "res@resolution";
+    String RES_RESOLUTION = "res@resolution";
     /**
      * "resolution".
      *
      * @see #RES_RESOLUTION
      */
-    public static final String RESOLUTION = "resolution";
+    String RESOLUTION = "resolution";
     /**
      * "res@protocolInfo".
      *
@@ -506,13 +500,13 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: string
      */
-    public static final String RES_PROTOCOL_INFO = "res@protocolInfo";
+    String RES_PROTOCOL_INFO = "res@protocolInfo";
     /**
      * "protocolInfo".
      *
      * @see #RES_PROTOCOL_INFO
      */
-    public static final String PROTOCOL_INFO = "protocolInfo";
+    String PROTOCOL_INFO = "protocolInfo";
     /**
      * "res@bitrate".
      *
@@ -520,13 +514,13 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: DIDL-Lite / Type: unsigned integer
      */
-    public static final String RES_BITRATE = "res@bitrate";
+    String RES_BITRATE = "res@bitrate";
     /**
      * "bitrate".
      *
      * @see #RES_BITRATE
      */
-    public static final String BITRATE = "bitrate";
+    String BITRATE = "bitrate";
     /**
      * "arib:objectType".
      *
@@ -536,7 +530,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: string
      */
-    public static final String ARIB_OBJECT_TYPE = "arib:objectType";
+    String ARIB_OBJECT_TYPE = "arib:objectType";
     /**
      * "arib:audioComponentType".
      *
@@ -548,7 +542,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: unsigned integer
      */
-    public static final String ARIB_AUDIO_COMPONENT_TYPE = "arib:audioComponentType";
+    String ARIB_AUDIO_COMPONENT_TYPE = "arib:audioComponentType";
     /**
      * "arib:audioComponentType@qualityIndicator".
      *
@@ -558,7 +552,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: unsigned integer
      */
-    public static final String ARIB_AUDIO_COMPONENT_TYPE_QI = "arib:audioComponentType@qualityIndicator";
+    String ARIB_AUDIO_COMPONENT_TYPE_QI = "arib:audioComponentType@qualityIndicator";
     /**
      * "arib:caProgramInfo".
      *
@@ -569,7 +563,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: boolean
      */
-    public static final String ARIB_CA_PROGRAM_INFO = "arib:caProgramInfo";
+    String ARIB_CA_PROGRAM_INFO = "arib:caProgramInfo";
     /**
      * "arib:caProgramInfo@price".
      *
@@ -585,7 +579,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: CSV string
      */
-    public static final String ARIB_CA_PROGRAM_INFO_PRICE = "arib:caProgramInfo@price";
+    String ARIB_CA_PROGRAM_INFO_PRICE = "arib:caProgramInfo@price";
     /**
      * "arib:caProgramInfo@available".
      *
@@ -597,7 +591,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: boolean
      */
-    public static final String ARIB_CA_PROGRAM_INFO_AVAILABLE = "arib:caProgramInfo@available";
+    String ARIB_CA_PROGRAM_INFO_AVAILABLE = "arib:caProgramInfo@available";
     /**
      * "arib:captionInfo".
      *
@@ -611,7 +605,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: boolean
      */
-    public static final String ARIB_CAPTION_INFO = "arib:captionInfo";
+    String ARIB_CAPTION_INFO = "arib:captionInfo";
     /**
      * "arib:copyControlInfo".
      *
@@ -625,7 +619,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: CSV string
      */
-    public static final String ARIB_COPY_CONTROL_INFO = "arib:copyControlInfo";
+    String ARIB_COPY_CONTROL_INFO = "arib:copyControlInfo";
     /**
      * "arib:dataProgramInfo".
      *
@@ -638,7 +632,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: boolean
      */
-    public static final String ARIB_DATE_PROGRAM_INFO = "arib:dataProgramInfo";
+    String ARIB_DATE_PROGRAM_INFO = "arib:dataProgramInfo";
     /**
      * "arib:dataProgramInfo@sync".
      *
@@ -649,7 +643,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: boolean
      */
-    public static final String ARIB_DATE_PROGRAM_INFO_SYNC = "arib:dataProgramInfo@sync";
+    String ARIB_DATE_PROGRAM_INFO_SYNC = "arib:dataProgramInfo@sync";
     /**
      * "arib:longDescription".
      *
@@ -666,7 +660,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: string
      */
-    public static final String ARIB_LONG_DESCRIPTION = "arib:longDescription";
+    String ARIB_LONG_DESCRIPTION = "arib:longDescription";
     /**
      * "arib:multiESInfo".
      *
@@ -677,7 +671,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: boolean
      */
-    public static final String ARIB_MULTI_ES_INFO = "arib:multiESInfo";
+    String ARIB_MULTI_ES_INFO = "arib:multiESInfo";
     /**
      * "arib:multiViewInfo".
      *
@@ -688,7 +682,7 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: boolean
      */
-    public static final String ARIB_MULTI_VIEW_INFO = "arib:multiViewInfo";
+    String ARIB_MULTI_VIEW_INFO = "arib:multiViewInfo";
     /**
      * "arib:videoComponentType".
      *
@@ -700,185 +694,34 @@ public class CdsObject implements Parcelable {
      *
      * <p>Namespace: ARIB / Type: unsigned integer
      */
-    public static final String ARIB_VIDEO_COMPONENT_TYPE = "arib:videoComponentType";
+    String ARIB_VIDEO_COMPONENT_TYPE = "arib:videoComponentType";
 
     // オブジェクト種別の定義
     @IntDef({TYPE_UNKNOWN, TYPE_VIDEO, TYPE_AUDIO, TYPE_IMAGE, TYPE_CONTAINER})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ContentType {
+    @interface ContentType {
     }
 
     /**
      * 未定義
      */
-    public static final int TYPE_UNKNOWN = 0;
+    int TYPE_UNKNOWN = 0;
     /**
      * 動画
      */
-    public static final int TYPE_VIDEO = 1;
+    int TYPE_VIDEO = 1;
     /**
      * 音楽
      */
-    public static final int TYPE_AUDIO = 2;
+    int TYPE_AUDIO = 2;
     /**
      * 画像
      */
-    public static final int TYPE_IMAGE = 3;
+    int TYPE_IMAGE = 3;
     /**
      * コンテナ
      */
-    public static final int TYPE_CONTAINER = 4;
-
-    /**
-     * このオブジェクトがitemか否か、itemのときtrue
-     */
-    private final boolean mItem;
-
-    /**
-     * DIDL-Liteノードの情報
-     */
-    @NonNull
-    private final Tag mRootTag;
-
-    /**
-     * XMLのタグ情報。
-     *
-     * <p>タグ名をKeyとして、TagのListを保持する。
-     * 同一のタグが複数ある場合はListに出現順に格納する。
-     */
-    @NonNull
-    private final TagMap mTagMap;
-
-    /**
-     * MediaServerのUDN
-     */
-    @NonNull
-    private final String mUdn;
-    /**
-     * \@idの値。
-     */
-    @NonNull
-    private final String mObjectId;
-    /**
-     * \@parentIDの値。
-     */
-    @NonNull
-    private final String mParentId;
-    /**
-     * dc:titleの値
-     */
-    @NonNull
-    private final String mTitle;
-    /**
-     * upnp:classの値
-     */
-    @NonNull
-    private final String mUpnpClass;
-    /**
-     * upnp:classのint値表現。
-     *
-     * @see #TYPE_UNKNOWN
-     * @see #TYPE_VIDEO
-     * @see #TYPE_AUDIO
-     * @see #TYPE_IMAGE
-     * @see #TYPE_CONTAINER
-     */
-    @ContentType
-    private final int mType;
-
-    private static class Param {
-        @NonNull
-        private final String mObjectId;
-        @NonNull
-        private final String mParentId;
-        @NonNull
-        private final String mTitle;
-        @NonNull
-        private final String mUpnpClass;
-
-        Param(TagMap map) {
-            final String objectId = map.getValue(ID);
-            final String parentId = map.getValue(PARENT_ID);
-            final String title = map.getValue(DC_TITLE);
-            final String upnpClass = map.getValue(UPNP_CLASS);
-            if (objectId == null || parentId == null || title == null || upnpClass == null) {
-                throw new IllegalArgumentException("Malformed item");
-            }
-            mObjectId = objectId;
-            mParentId = parentId;
-            mTitle = title;
-            mUpnpClass = upnpClass;
-        }
-    }
-
-    /**
-     * elementをもとにインスタンス作成
-     *
-     * @param udn     MediaServerのUDN
-     * @param element objectを示すelement
-     * @param rootTag DIDL-Liteノードの情報
-     */
-    CdsObject(
-            @NonNull final String udn,
-            @NonNull final Element element,
-            @NonNull final Tag rootTag) {
-        mUdn = udn;
-        mItem = isItem(element.getTagName());
-        mRootTag = rootTag;
-        mTagMap = parseElement(element);
-        final Param param = new Param(mTagMap);
-        mObjectId = param.mObjectId;
-        mParentId = param.mParentId;
-        mTitle = param.mTitle;
-        mUpnpClass = param.mUpnpClass;
-        mType = getType(mItem, mUpnpClass);
-    }
-
-    private static boolean isItem(String tagName) {
-        switch (tagName) {
-            case ITEM:
-                return true;
-            case CONTAINER:
-                return false;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    /**
-     * 子要素の情報をパースし、格納する。
-     *
-     * @param element objectを示すelement
-     */
-    @NonNull
-    private static TagMap parseElement(@NonNull final Element element) {
-        final TagMap map = new TagMap();
-        map.putTag("", new Tag(element, true));
-        Node node = element.getFirstChild();
-        for (; node != null; node = node.getNextSibling()) {
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-            map.putTag(node.getNodeName(), new Tag((Element) node));
-        }
-        return map;
-    }
-
-    @ContentType
-    private static int getType(
-            final boolean isItem,
-            final String upnpClass) {
-        if (!isItem) {
-            return TYPE_CONTAINER;
-        } else if (upnpClass.startsWith(IMAGE_ITEM)) {
-            return TYPE_IMAGE;
-        } else if (upnpClass.startsWith(AUDIO_ITEM)) {
-            return TYPE_AUDIO;
-        } else if (upnpClass.startsWith(VIDEO_ITEM)) {
-            return TYPE_VIDEO;
-        }
-        return TYPE_UNKNOWN;
-    }
+    int TYPE_CONTAINER = 4;
 
     /**
      * MediaServerのUDNを返す。
@@ -886,27 +729,21 @@ public class CdsObject implements Parcelable {
      * @return MediaServerのUDN
      */
     @NonNull
-    public String getUdn() {
-        return mUdn;
-    }
+    String getUdn();
 
     /**
      * コンテナであるか否かを返す。
      *
      * @return trueのときコンテナ。
      */
-    public boolean isContainer() {
-        return !mItem;
-    }
+    boolean isContainer();
 
     /**
      * アイテムであるか否かを返す。
      *
      * @return trueのときアイテム。
      */
-    public boolean isItem() {
-        return mItem;
-    }
+    boolean isItem();
 
     /**
      * Typeの値を返す。
@@ -914,9 +751,7 @@ public class CdsObject implements Parcelable {
      * @return Type値
      */
     @ContentType
-    public int getType() {
-        return mType;
-    }
+    int getType();
 
     /**
      * \@idの値を返す。
@@ -924,9 +759,7 @@ public class CdsObject implements Parcelable {
      * @return \@idの値
      */
     @NonNull
-    public String getObjectId() {
-        return mObjectId;
-    }
+    String getObjectId();
 
     /**
      * \@parentIDの値を返す。
@@ -934,9 +767,7 @@ public class CdsObject implements Parcelable {
      * @return \@parentIDの値
      */
     @NonNull
-    public String getParentId() {
-        return mParentId;
-    }
+    String getParentId();
 
     /**
      * upnp:classの値を返す。
@@ -944,9 +775,7 @@ public class CdsObject implements Parcelable {
      * @return upnp:classの値
      */
     @NonNull
-    public String getUpnpClass() {
-        return mUpnpClass;
-    }
+    String getUpnpClass();
 
     /**
      * dc:titleの値を返す。
@@ -954,9 +783,7 @@ public class CdsObject implements Parcelable {
      * @return dc:titleの値
      */
     @NonNull
-    public String getTitle() {
-        return mTitle;
-    }
+    String getTitle();
 
     /**
      * XPATH風の指定で示された値を返す。
@@ -974,9 +801,7 @@ public class CdsObject implements Parcelable {
      * @see #getValue(String, int)
      */
     @Nullable
-    public String getValue(@NonNull final String xpath) {
-        return mTagMap.getValue(xpath);
-    }
+    String getValue(@NonNull String xpath);
 
     /**
      * XPATH風の指定で示された値を返す。
@@ -999,11 +824,9 @@ public class CdsObject implements Parcelable {
      * @return 指定された値。見つからない場合はnull
      */
     @Nullable
-    public String getValue(
-            @NonNull final String xpath,
-            final int index) {
-        return mTagMap.getValue(xpath, index);
-    }
+    String getValue(
+            @NonNull String xpath,
+            int index);
 
     /**
      * タグ名と属性名を指定して値を取り出す。
@@ -1017,11 +840,9 @@ public class CdsObject implements Parcelable {
      * @see #getValue(String, String, int)
      */
     @Nullable
-    public String getValue(
-            @Nullable final String tagName,
-            @Nullable final String attrName) {
-        return mTagMap.getValue(tagName, attrName);
-    }
+    String getValue(
+            @Nullable String tagName,
+            @Nullable String attrName);
 
     /**
      * タグ名と属性名を指定して値を取り出す。
@@ -1035,12 +856,10 @@ public class CdsObject implements Parcelable {
      * @return 指定された値。見つからない場合はnull
      */
     @Nullable
-    public String getValue(
-            @Nullable final String tagName,
-            @Nullable final String attrName,
-            final int index) {
-        return mTagMap.getValue(tagName, attrName, index);
-    }
+    String getValue(
+            @Nullable String tagName,
+            @Nullable String attrName,
+            int index);
 
     /**
      * 指定したタグ名のTagインスタンスを返す。
@@ -1051,9 +870,7 @@ public class CdsObject implements Parcelable {
      * @return Tagインスタンス、見つからない場合はnull
      */
     @Nullable
-    public Tag getTag(@Nullable final String tagName) {
-        return mTagMap.getTag(tagName);
-    }
+    Tag getTag(@Nullable String tagName);
 
     /**
      * 指定したタグ名、インデックスのTagインスタンスを返す。
@@ -1063,11 +880,9 @@ public class CdsObject implements Parcelable {
      * @return Tagインスタンス、見つからない場合はnull
      */
     @Nullable
-    public Tag getTag(
-            @Nullable final String tagName,
-            final int index) {
-        return mTagMap.getTag(tagName, index);
-    }
+    Tag getTag(
+            @Nullable String tagName,
+            int index);
 
     /**
      * ルートタグ情報を返す。
@@ -1077,9 +892,7 @@ public class CdsObject implements Parcelable {
      * @return ルートタグ情報
      */
     @NonNull
-    public Tag getRootTag() {
-        return mRootTag;
-    }
+    Tag getRootTag();
 
     /**
      * Tagを格納したマップそのものを返す。
@@ -1089,9 +902,7 @@ public class CdsObject implements Parcelable {
      * @return TagMap
      */
     @NonNull
-    TagMap getTagMap() {
-        return mTagMap;
-    }
+    TagMap getTagMap();
 
     /**
      * 指定したタグ名のTagインスタンスリストを返す。
@@ -1100,30 +911,26 @@ public class CdsObject implements Parcelable {
      * @return Tagインスタンスリスト
      */
     @Nullable
-    public List<Tag> getTagList(@Nullable final String tagName) {
-        return mTagMap.getTagList(tagName);
-    }
+    List<Tag> getTagList(@Nullable String tagName);
 
     /**
      * XPATH風の指定で示された値をInt値として返す。
      *
-     * <p>{@link #getValue(String)} の結果を {@link #parseIntSafely(String, int)} に渡すことと等価
+     * <p>{@link #getValue(String)} の結果を {@link PropertyParser#parseIntSafely(String, int)} に渡すことと等価
      *
      * @param xpath        パラメータの位置を表現するXPATH風の指定
      * @param defaultValue 値が見つからない場合、Int値にパースできない値だった場合のデフォルト値
      * @return 指定された値
      * @see #getValue(String)
      */
-    public int getIntValue(
-            @NonNull final String xpath,
-            final int defaultValue) {
-        return parseIntSafely(getValue(xpath), defaultValue);
-    }
+    int getIntValue(
+            @NonNull String xpath,
+            int defaultValue);
 
     /**
      * XPATH風の指定で示された値をInt値として返す。
      *
-     * <p>{@link #getValue(String, int)} の結果を {@link #parseIntSafely(String, int)} に渡すことと等価
+     * <p>{@link #getValue(String, int)} の結果を {@link PropertyParser#parseIntSafely(String, int)} に渡すことと等価
      *
      * @param xpath        パラメータの位置を表現するXPATH風の指定
      * @param index        インデックス値
@@ -1131,31 +938,27 @@ public class CdsObject implements Parcelable {
      * @return 指定された値
      * @see #getValue(String, int)
      */
-    public int getIntValue(
-            @NonNull final String xpath,
-            final int index,
-            final int defaultValue) {
-        return parseIntSafely(getValue(xpath, index), defaultValue);
-    }
+    int getIntValue(
+            @NonNull String xpath,
+            int index,
+            int defaultValue);
 
     /**
      * XPATH風の指定で示された値をDateとして返す。
      *
-     * <p>{@link #getValue(String)} の結果を {@link #parseDate(String)} に渡すことと等価
+     * <p>{@link #getValue(String)} の結果を {@link PropertyParser#parseDate(String)} に渡すことと等価
      *
      * @param xpath パラメータの位置を表現するXPATH風の指定
      * @return 指定された値。値が見つからない場合、パースできない値の場合null
      * @see #getValue(String, int)
      */
     @Nullable
-    public Date getDateValue(@NonNull final String xpath) {
-        return parseDate(getValue(xpath));
-    }
+    Date getDateValue(@NonNull String xpath);
 
     /**
      * XPATH風の指定で示された値をDateとして返す。
      *
-     * <p>{@link #getValue(String, int)} の結果を {@link #parseDate(String)} に渡すことと等価
+     * <p>{@link #getValue(String, int)} の結果を {@link PropertyParser#parseDate(String)} に渡すことと等価
      *
      * @param xpath パラメータの位置を表現するXPATH風の指定
      * @param index インデックス値
@@ -1163,189 +966,31 @@ public class CdsObject implements Parcelable {
      * @see #getValue(String, int)
      */
     @Nullable
-    public Date getDateValue(
-            @NonNull final String xpath,
-            final int index) {
-        return parseDate(getValue(xpath, index));
-    }
+    Date getDateValue(
+            @NonNull String xpath,
+            int index);
 
-    /**
-     * 与えられた文字列を10進数としてパースする。
-     *
-     * @param value        パースする文字列
-     * @param defaultValue パースできない場合のデフォルト値
-     * @return パース結果
-     */
-    public static int parseIntSafely(
-            @Nullable final String value,
-            final int defaultValue) {
-        return parseIntSafely(value, 10, defaultValue);
-    }
-
-    /**
-     * 与えられた文字列をradix進数としてパースする。
-     *
-     * @param value        パースする文字列
-     * @param radix        パースする文字列の基数
-     * @param defaultValue パースできない場合のデフォルト値
-     * @return パース結果
-     */
-    public static int parseIntSafely(
-            @Nullable final String value,
-            final int radix,
-            final int defaultValue) {
-        if (TextUtils.isEmpty(value)) {
-            return defaultValue;
-        }
-        try {
-            return Integer.parseInt(value, radix);
-        } catch (final NumberFormatException e) {
-            return defaultValue;
-        }
-    }
-
-    private static final DateFormat FORMAT_D = new SimpleDateFormat("yyyy-MM-dd", Locale.JAPAN);
-    private static final DateFormat FORMAT_T = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.JAPAN);
-    private static final DateFormat FORMAT_Z = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.JAPAN);
-
-    private static Date parseD(@NonNull final String value) throws ParseException {
-        synchronized (FORMAT_D) {
-            return FORMAT_D.parse(value);
-        }
-    }
-
-    private static Date parseT(@NonNull final String value) throws ParseException {
-        synchronized (FORMAT_T) {
-            return FORMAT_T.parse(value);
-        }
-    }
-
-    private static Date parseZ(@NonNull final String value) throws ParseException {
-        synchronized (FORMAT_Z) {
-            return FORMAT_Z.parse(value);
-        }
-    }
-
-
-    /**
-     * 与えられた文字列をパースしてDateとして戻す。
-     *
-     * <p>CDSで使用される日付フォーマットにはいくつかバリエーションがあるが、
-     * 該当するフォーマットでパースを行う。
-     *
-     * @param value パースする文字列
-     * @return パース結果、パースできない場合null
-     */
-    @Nullable
-    public static Date parseDate(@Nullable final String value) {
-        if (TextUtils.isEmpty(value)) {
-            return null;
-        }
-        try {
-            if (value.length() <= 10) {
-                return parseD(value);
-            }
-            if (value.length() <= 19) {
-                return parseT(value);
-            }
-            if (value.lastIndexOf(':') == 22) {
-                return parseZ(value.substring(0, 22) + value.substring(23));
-            }
-            return parseZ(value);
-        } catch (final ParseException e) {
-            return null;
-        }
-    }
 
     /**
      * リソースの数を返す。
      *
      * @return リソースの数
      */
-    public int getResourceCount() {
-        final List<Tag> list = getTagList(CdsObject.RES);
-        return list == null ? 0 : list.size();
-    }
+    int getResourceCount();
 
     /**
      * リソースを持っているか否かを返す。
      *
      * @return リソースを持っている場合true
      */
-    public boolean hasResource() {
-        final List<Tag> tagList = getTagList(CdsObject.RES);
-        return !(tagList == null || tagList.isEmpty());
-    }
+    boolean hasResource();
 
     /**
      * 著作権保護されたリソースを持っているか否かを返す。
      *
      * @return 著作権保護されたリソースを持っている場合true
      */
-    public boolean hasProtectedResource() {
-        final List<Tag> tagList = getTagList(CdsObject.RES);
-        if (tagList == null) {
-            return false;
-        }
-        for (final Tag tag : tagList) {
-            final String protocolInfo = tag.getAttribute(CdsObject.PROTOCOL_INFO);
-            final String mimeType = extractMimeTypeFromProtocolInfo(protocolInfo);
-            if (!TextUtils.isEmpty(mimeType) && mimeType.equals("application/x-dtcp1")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * protocolInfoの文字列からMimeTypeの文字列を抽出する。
-     *
-     * @param protocolInfo protocolInfo
-     * @return MimeTypeの文字列。抽出に失敗した場合null
-     */
-    @Nullable
-    public static String extractMimeTypeFromProtocolInfo(@Nullable final String protocolInfo) {
-        if (TextUtils.isEmpty(protocolInfo)) {
-            return null;
-        }
-        final String[] protocols = protocolInfo.split(";");
-        if (protocols.length == 0) {
-            return null;
-        }
-        final String[] sections = protocols[0].split(":");
-        if (sections.length < 3) {
-            return null;
-        }
-        return sections[2];
-    }
-
-    /**
-     * protocolInfoの文字列からProtocolの文字列を抽出する。
-     *
-     * @param protocolInfo protocolInfo
-     * @return Protocolの文字列。抽出に失敗した場合null
-     */
-    @Nullable
-    public static String extractProtocolFromProtocolInfo(@Nullable final String protocolInfo) {
-        if (TextUtils.isEmpty(protocolInfo)) {
-            return null;
-        }
-        final String[] protocols = protocolInfo.split(";");
-        if (protocols.length == 0) {
-            return null;
-        }
-        final String[] sections = protocols[0].split(":");
-        if (sections.length < 3) {
-            return null;
-        }
-        return sections[0];
-    }
-
-    @Override
-    @NonNull
-    public String toString() {
-        return getTitle();
-    }
+    boolean hasProtectedResource();
 
     /**
      * 全情報をダンプした文字列を返す。
@@ -1353,72 +998,5 @@ public class CdsObject implements Parcelable {
      * @return ダンプ文字列
      */
     @NonNull
-    public String toDumpString() {
-        return mTagMap.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return mTagMap.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof CdsObject)) {
-            return false;
-        }
-        final CdsObject obj = (CdsObject) o;
-        return mObjectId.equals(obj.mObjectId) && mUdn.equals(obj.mUdn);
-    }
-
-    /**
-     * Parcelable用のコンストラクタ。
-     *
-     * @param in Parcel
-     */
-    private CdsObject(@NonNull final Parcel in) {
-        mUdn = in.readString();
-        mItem = in.readByte() != 0;
-        mRootTag = in.readParcelable(Tag.class.getClassLoader());
-        mTagMap = in.readParcelable(TagMap.class.getClassLoader());
-        final Param param = new Param(mTagMap);
-        mObjectId = param.mObjectId;
-        mParentId = param.mParentId;
-        mTitle = param.mTitle;
-        mUpnpClass = param.mUpnpClass;
-        mType = getType(mItem, mUpnpClass);
-    }
-
-    @Override
-    public void writeToParcel(
-            @NonNull final Parcel dest,
-            int flags) {
-        dest.writeString(mUdn);
-        dest.writeByte((byte) (mItem ? 1 : 0));
-        dest.writeParcelable(mRootTag, flags);
-        dest.writeParcelable(mTagMap, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     * Parcelableのためのフィールド
-     */
-    public static final Creator<CdsObject> CREATOR = new Creator<CdsObject>() {
-        @Override
-        public CdsObject createFromParcel(@NonNull final Parcel in) {
-            return new CdsObject(in);
-        }
-
-        @Override
-        public CdsObject[] newArray(final int size) {
-            return new CdsObject[size];
-        }
-    };
+    String toDumpString();
 }
