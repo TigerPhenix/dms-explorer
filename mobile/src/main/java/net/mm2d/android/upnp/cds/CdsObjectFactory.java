@@ -99,7 +99,7 @@ final class CdsObjectFactory {
     }
 
     private static Tag createRootTag(@NonNull final Document doc) {
-        return new Tag(doc.getDocumentElement(), true);
+        return Tag.create(doc.getDocumentElement(), true);
     }
 
     /**
