@@ -33,7 +33,7 @@ import net.mm2d.dmsexplorer.BuildConfig;
 import net.mm2d.dmsexplorer.Const;
 import net.mm2d.dmsexplorer.R;
 import net.mm2d.dmsexplorer.Repository;
-import net.mm2d.dmsexplorer.domain.model.CustomTabsHelper;
+import net.mm2d.dmsexplorer.domain.tabs.CustomTabsHelper;
 import net.mm2d.dmsexplorer.domain.model.OpenUriCustomTabsModel;
 import net.mm2d.dmsexplorer.domain.model.OpenUriModel;
 import net.mm2d.dmsexplorer.settings.Key;
@@ -285,6 +285,10 @@ public class SettingsActivity extends PreferenceActivityCompat {
             findPreference(Key.VERSION_NUMBER.name()).setSummary(makeVersionInfo());
             findPreference(Key.SOURCE_CODE.name()).setOnPreferenceClickListener(preference -> {
                 openUrl(getActivity(), Const.URL_GITHUB_PROJECT);
+                return true;
+            });
+            findPreference(Key.PRIVACY_POLICY.name()).setOnPreferenceClickListener(preference -> {
+                openUrl(getActivity(), Const.URL_PRIVACY_POLICY);
                 return true;
             });
             final Settings settings = Settings.get();

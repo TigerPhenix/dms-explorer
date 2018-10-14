@@ -14,6 +14,12 @@
         />
 
     <Preference
+        android:key="PRIVACY_POLICY"
+        android:summary="@string/pref_message_privacy_policy"
+        android:title="@string/pref_title_privacy_policy"
+        />
+
+    <Preference
         android:key="COPYRIGHT"
         android:summary="@string/pref_message_copyright"
         android:title="@string/pref_title_copyright"
@@ -27,6 +33,7 @@
 
     <Preference
         android:key="LICENSE"
+        android:summary="@string/pref_message_license"
         android:title="@string/pref_title_license"
         />
 
