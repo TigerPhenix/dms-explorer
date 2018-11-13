@@ -7,11 +7,10 @@
 
 package net.mm2d.dmsexplorer.core.infrastructure.storage;
 
-import android.support.annotation.NonNull;
-
 import net.mm2d.dmsexplorer.core.domain.DiscoveryEvent;
 import net.mm2d.dmsexplorer.core.domain.ServerRepository;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;

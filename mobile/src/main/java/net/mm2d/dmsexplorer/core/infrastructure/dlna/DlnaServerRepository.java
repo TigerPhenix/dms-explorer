@@ -7,8 +7,6 @@
 
 package net.mm2d.dmsexplorer.core.infrastructure.dlna;
 
-import android.support.annotation.NonNull;
-
 import net.mm2d.android.upnp.AvControlPointManager;
 import net.mm2d.android.upnp.cds.MediaServer;
 import net.mm2d.android.upnp.cds.MsControlPoint;
@@ -19,6 +17,7 @@ import net.mm2d.dmsexplorer.core.domain.ServerRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;

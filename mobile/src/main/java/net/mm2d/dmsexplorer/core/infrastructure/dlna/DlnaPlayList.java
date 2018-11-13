@@ -1,7 +1,6 @@
 package net.mm2d.dmsexplorer.core.infrastructure.dlna;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
 
 import net.mm2d.dmsexplorer.core.domain.Entry;
 import net.mm2d.dmsexplorer.core.domain.PlayList;
@@ -11,6 +10,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Observable;
 
 /**

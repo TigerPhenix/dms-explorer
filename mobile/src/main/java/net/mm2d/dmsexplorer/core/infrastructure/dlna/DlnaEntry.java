@@ -1,15 +1,13 @@
 package net.mm2d.dmsexplorer.core.infrastructure.dlna;
 
-import android.support.annotation.NonNull;
-
 import net.mm2d.android.upnp.cds.CdsObject;
 import net.mm2d.dmsexplorer.core.domain.Entry;
 import net.mm2d.dmsexplorer.core.domain.PlayList;
 import net.mm2d.dmsexplorer.core.domain.Result;
 import net.mm2d.dmsexplorer.domain.entity.ContentType;
 
-import javax.annotation.Nullable;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;

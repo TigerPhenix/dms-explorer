@@ -7,11 +7,10 @@
 
 package net.mm2d.dmsexplorer.core.domain;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import net.mm2d.dmsexplorer.domain.entity.ContentType;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 

@@ -18,6 +18,7 @@ import net.mm2d.log.Log;
 public class MainRepository {
     private final AvControlPointManager mAvControlPointManager;
     private final ServerRepositories mServerRepositories;
+
     public MainRepository() {
         mAvControlPointManager = new AvControlPointManager();
         mServerRepositories = new ServerRepositories(new DlnaServerRepository(mAvControlPointManager));

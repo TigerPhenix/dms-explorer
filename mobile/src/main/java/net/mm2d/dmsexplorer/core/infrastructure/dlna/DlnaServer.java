@@ -1,7 +1,5 @@
 package net.mm2d.dmsexplorer.core.infrastructure.dlna;
 
-import android.support.annotation.NonNull;
-
 import net.mm2d.android.upnp.cds.CdsObject;
 import net.mm2d.android.upnp.cds.MediaServer;
 import net.mm2d.android.upnp.cds.RootCdsObject;
@@ -9,6 +7,7 @@ import net.mm2d.dmsexplorer.core.domain.Entry;
 import net.mm2d.dmsexplorer.core.domain.Result;
 import net.mm2d.dmsexplorer.core.domain.Server;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
