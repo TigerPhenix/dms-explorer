@@ -10,7 +10,7 @@ package net.mm2d.dmsexplorer.core;
 import net.mm2d.android.upnp.AvControlPointManager;
 import net.mm2d.dmsexplorer.core.domain.ServerRepositories;
 import net.mm2d.dmsexplorer.core.infrastructure.dlna.DlnaServerRepository;
-import net.mm2d.log.Log;
+import net.mm2d.log.Logger;
 
 /**
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)
@@ -24,7 +24,7 @@ public class MainRepository {
         mServerRepositories = new ServerRepositories(new DlnaServerRepository(mAvControlPointManager));
         mServerRepositories.getDiscoveryObservable()
                 .subscribe(discoveryEvent -> {
-                    Log.e(discoveryEvent.getType() + " " + discoveryEvent.getServer());
+                    Logger.e(discoveryEvent.getType() + " " + discoveryEvent.getServer());
                 });
     }
 
