@@ -9,7 +9,7 @@ package net.mm2d.dmsexplorer.log
 
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.Size
+import androidx.annotation.Size
 
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -20,8 +20,9 @@ internal class FirebaseSender(context: Context) : Sender {
     private val analytics = FirebaseAnalytics.getInstance(context)
 
     override fun logEvent(
-            @Size(min = 1L, max = 40L) name: String,
-            params: Bundle?) {
+        @Size(min = 1L, max = 40L) name: String,
+        params: Bundle?
+    ) {
         analytics.logEvent(name, params)
     }
 }
