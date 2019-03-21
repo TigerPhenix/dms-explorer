@@ -12,8 +12,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.customtabs.CustomTabsIntent;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
@@ -21,6 +19,11 @@ import net.mm2d.android.util.LaunchUtils;
 import net.mm2d.dmsexplorer.R;
 import net.mm2d.dmsexplorer.domain.tabs.CustomTabsHelper;
 import net.mm2d.dmsexplorer.domain.tabs.OpenUriUtils;
+
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabsIntent;
 
 /**
  * @author <a href="mailto:ryo@mm2d.net">大前良介 (OHMAE Ryosuke)</a>
@@ -40,7 +43,8 @@ public class OpenUriCustomTabsModel implements OpenUriModel {
         mThemeModel = themeModel;
     }
 
-    public void setUseCustomTabs(boolean use) {
+    @Override
+    public void setUseCustomTabs(final boolean use) {
         mUseCustomTabs = use;
     }
 
@@ -56,6 +60,16 @@ public class OpenUriCustomTabsModel implements OpenUriModel {
         if (!openUriOnCustomTabs(context, uri)) {
             LaunchUtils.openUri(context, uri);
         }
+    }
+
+    @Override
+    public void mayLaunchUrl(@NonNull final String url) {
+        mHelper.mayLaunchUrl(url);
+    }
+
+    @Override
+    public void mayLaunchUrl(@NonNull final List<String> urls) {
+        mHelper.mayLaunchUrl(urls);
     }
 
     private boolean openUriOnCustomTabs(

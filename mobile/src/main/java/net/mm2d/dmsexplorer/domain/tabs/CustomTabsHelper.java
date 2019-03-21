@@ -12,17 +12,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsCallback;
-import android.support.customtabs.CustomTabsClient;
-import android.support.customtabs.CustomTabsServiceConnection;
-import android.support.customtabs.CustomTabsSession;
+import android.net.Uri;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabsCallback;
+import androidx.browser.customtabs.CustomTabsClient;
+import androidx.browser.customtabs.CustomTabsService;
+import androidx.browser.customtabs.CustomTabsServiceConnection;
+import androidx.browser.customtabs.CustomTabsSession;
 
 /**
  * @author <a href="mailto:ryo@mm2d.net">大前良介 (OHMAE Ryosuke)</a>
@@ -30,21 +34,9 @@ import java.util.Set;
 public class CustomTabsHelper extends CustomTabsServiceConnection {
     private static final List<String> PREFERRED_PACKAGES = Arrays.asList(
             "com.android.chrome", // Chrome
-            "org.mozilla.firefox", // Firefox
-            "com.microsoft.emmx", // Microsoft Edge
-            "com.yandex.browser", //Yandex Browser
-            "com.sec.android.app.sbrowser", // Samsung Internet Browser
-            "com.kiwibrowser.browser", // Kiwi Browser
-            "com.brave.browser", // Brave Browser
-            "com.chrome.beta",  // Chrome Beta
-            "com.chrome.dev",  // Chrome Dev
-            "com.chrome.canary", // Chrome Canary
-            "org.mozilla.firefox_beta", // Firefox Beta
-            "org.mozilla.fennec_aurora", // Firefox Nightly
-            "org.mozilla.focus", // Firefox Focus
-            "com.yandex.browser.beta", // Yandex Browser (beta)
-            "com.yandex.browser.alpha", // Yandex Browser (alpha)
-            "com.google.android.apps.chrome" // Chrome Local
+            "com.chrome.beta",    // Chrome Beta
+            "com.chrome.dev",     // Chrome Dev
+            "com.chrome.canary"   // Chrome Canary
     );
     private static final String ACTION_CUSTOM_TABS_CONNECTION =
             "android.support.customtabs.action.CustomTabsService";
@@ -53,7 +45,9 @@ public class CustomTabsHelper extends CustomTabsServiceConnection {
     @Nullable
     private static String sPackageNameToBind;
 
-    public static void addKeepAliveExtra(Context context, Intent intent) {
+    public static void addKeepAliveExtra(
+            Context context,
+            Intent intent) {
         Intent keepAliveIntent = new Intent().setClassName(
                 context.getPackageName(), KeepAliveService.class.getCanonicalName());
         intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, keepAliveIntent);
@@ -107,15 +101,13 @@ public class CustomTabsHelper extends CustomTabsServiceConnection {
     private final Context mContext;
     private boolean mBound;
     @Nullable
-    private CustomTabsClient mClient;
-    @Nullable
     private CustomTabsSession mSession;
 
     public CustomTabsHelper(@NonNull final Context context) {
         mContext = context;
     }
 
-    public void bind() {
+    void bind() {
         if (mBound) {
             return;
         }
@@ -132,17 +124,34 @@ public class CustomTabsHelper extends CustomTabsServiceConnection {
         }
         mContext.unbindService(this);
         mBound = false;
-        mClient = null;
         mSession = null;
+    }
+
+    public void mayLaunchUrl(@NonNull final String url) {
+        if (mSession != null) {
+            mSession.mayLaunchUrl(Uri.parse(url), null, null);
+        }
+    }
+
+    public void mayLaunchUrl(@NonNull final List<String> urls) {
+        if (mSession == null || urls.isEmpty()) {
+            return;
+        }
+        if (urls.size() == 1) {
+            mSession.mayLaunchUrl(Uri.parse(urls.get(0)), null, null);
+            return;
+        }
+        final List<Bundle> otherLikelyBundles = new ArrayList<>();
+        for (int i = 1; i < urls.size(); i++) {
+            final Bundle bundle = new Bundle();
+            bundle.putParcelable(CustomTabsService.KEY_URL, Uri.parse(urls.get(i)));
+            otherLikelyBundles.add(bundle);
+        }
+        mSession.mayLaunchUrl(Uri.parse(urls.get(0)), null, otherLikelyBundles);
     }
 
     @Nullable
     public CustomTabsSession getSession() {
-        if (mClient == null) {
-            mSession = null;
-        } else if (mSession == null) {
-            mSession = mClient.newSession(new CustomTabsCallback());
-        }
         return mSession;
     }
 
@@ -150,12 +159,12 @@ public class CustomTabsHelper extends CustomTabsServiceConnection {
     public void onCustomTabsServiceConnected(
             final ComponentName name,
             final CustomTabsClient client) {
-        mClient = client;
+        client.warmup(0);
+        mSession = client.newSession(new CustomTabsCallback());
     }
 
     @Override
     public void onServiceDisconnected(final ComponentName name) {
-        mClient = null;
         mSession = null;
     }
 }

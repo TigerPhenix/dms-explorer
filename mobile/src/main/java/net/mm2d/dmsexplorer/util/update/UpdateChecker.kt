@@ -7,7 +7,8 @@
 
 package net.mm2d.dmsexplorer.util.update
 
-import android.support.annotation.VisibleForTesting
+import android.annotation.SuppressLint
+import androidx.annotation.VisibleForTesting
 import com.squareup.moshi.Moshi
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +19,7 @@ import net.mm2d.dmsexplorer.util.OkHttpClientHolder
 import net.mm2d.dmsexplorer.util.update.model.EMPTY_UPDATE_INFO
 import net.mm2d.dmsexplorer.util.update.model.UpdateInfo
 import net.mm2d.dmsexplorer.view.eventrouter.EventRouter
-import net.mm2d.log.Log
+import net.mm2d.log.Logger
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -28,7 +29,7 @@ import java.util.concurrent.TimeUnit
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)
  */
 class UpdateChecker(
-        private val currentVersion: Int = BuildConfig.VERSION_CODE
+    private val currentVersion: Int = BuildConfig.VERSION_CODE
 ) {
     private val moshi by lazy {
         Moshi.Builder().build()
@@ -38,18 +39,19 @@ class UpdateChecker(
     }
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-                .baseUrl(Const.URL_UPDATE_BASE)
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(OkHttpClientHolder.get())
-                .build()
+            .baseUrl(Const.URL_UPDATE_BASE)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(OkHttpClientHolder.get())
+            .build()
     }
 
+    @SuppressLint("CheckResult")
     fun check() {
         Single.fromCallable { Settings.get() }
-                .subscribeOn(Schedulers.io())
-                .flatMap { checkIfNeed(it) }
-                .subscribe { it -> checkAndNotify(it) }
+            .subscribeOn(Schedulers.io())
+            .flatMap { checkIfNeed(it) }
+            .subscribe { it -> checkAndNotify(it) }
     }
 
     private fun checkIfNeed(settings: Settings): Single<UpdateInfo> {
@@ -58,8 +60,8 @@ class UpdateChecker(
             return Single.just(EMPTY_UPDATE_INFO)
         }
         return retrofit
-                .create(UpdateService::class.java)
-                .get()
+            .create(UpdateService::class.java)
+            .get()
     }
 
     private fun makeConsistent(settings: Settings) {
@@ -86,8 +88,9 @@ class UpdateChecker(
     }
 
     private fun checkAndSave(
-            settings: Settings,
-            info: UpdateInfo) {
+        settings: Settings,
+        info: UpdateInfo
+    ) {
         settings.setUpdateFetchTime()
         val normalizedJson = jsonAdapter.toJson(info)
         if (normalizedJson == settings.updateJson) {
@@ -106,7 +109,7 @@ class UpdateChecker(
             val info = jsonAdapter.fromJson(json)
             return info != null && isUpdateAvailable(info)
         } catch (e: Exception) {
-            Log.w(e)
+            Logger.w(e)
         }
 
         return false
