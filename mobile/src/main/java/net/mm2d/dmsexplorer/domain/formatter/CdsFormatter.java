@@ -13,6 +13,7 @@ import android.text.format.DateFormat;
 import android.util.Pair;
 
 import net.mm2d.android.upnp.cds.CdsObject;
+import net.mm2d.android.upnp.cds.PropertyParser;
 import net.mm2d.android.upnp.cds.Tag;
 import net.mm2d.android.util.AribUtils;
 import net.mm2d.dmsexplorer.R;
@@ -211,7 +212,7 @@ public class CdsFormatter {
         if (str == null) {
             return null;
         }
-        final Date date = cdsObject.parseDate(str);
+        final Date date = PropertyParser.parseDate(str);
         if (date == null) {
             return null;
         }
