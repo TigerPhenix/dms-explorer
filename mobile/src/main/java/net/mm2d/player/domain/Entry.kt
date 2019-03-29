@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/MIT
  */
 
-package net.mm2d.dmsexplorer.core.domain
+package net.mm2d.player.domain
 
 import io.reactivex.Observable
 import io.reactivex.Single

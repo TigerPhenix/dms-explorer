@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/MIT
  */
 
-package net.mm2d.dmsexplorer.core.infrastructure.dlna
+package net.mm2d.player.infrastructure.dlna
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -13,8 +13,8 @@ import net.mm2d.android.upnp.AvControlPointManager
 import net.mm2d.android.upnp.cds.MediaServer
 import net.mm2d.android.upnp.cds.MsControlPoint
 import net.mm2d.android.upnp.cds.MsControlPoint.MsDiscoveryListener
-import net.mm2d.dmsexplorer.core.domain.DiscoveryEvent
-import net.mm2d.dmsexplorer.core.domain.ServerRepository
+import net.mm2d.player.domain.DiscoveryEvent
+import net.mm2d.player.domain.ServerRepository
 import java.util.*
 
 /**

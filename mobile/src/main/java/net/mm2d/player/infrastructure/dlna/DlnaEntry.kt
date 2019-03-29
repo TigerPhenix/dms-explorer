@@ -1,4 +1,4 @@
-package net.mm2d.dmsexplorer.core.infrastructure.dlna
+package net.mm2d.player.infrastructure.dlna
 
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -7,9 +7,9 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.ReplaySubject
 import io.reactivex.subjects.Subject
 import net.mm2d.android.upnp.cds.CdsObject
-import net.mm2d.dmsexplorer.core.domain.Entry
-import net.mm2d.dmsexplorer.core.domain.PlayList
-import net.mm2d.dmsexplorer.core.domain.Result
+import net.mm2d.player.domain.Entry
+import net.mm2d.player.domain.PlayList
+import net.mm2d.player.domain.Result
 import net.mm2d.dmsexplorer.domain.entity.ContentType
 
 /**

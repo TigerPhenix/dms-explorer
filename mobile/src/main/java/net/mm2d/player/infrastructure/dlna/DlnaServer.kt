@@ -1,13 +1,13 @@
-package net.mm2d.dmsexplorer.core.infrastructure.dlna
+package net.mm2d.player.infrastructure.dlna
 
 import io.reactivex.Observable
 import io.reactivex.Single
 import net.mm2d.android.upnp.cds.CdsObject
 import net.mm2d.android.upnp.cds.MediaServer
 import net.mm2d.android.upnp.cds.RootCdsObject
-import net.mm2d.dmsexplorer.core.domain.Entry
-import net.mm2d.dmsexplorer.core.domain.Result
-import net.mm2d.dmsexplorer.core.domain.Server
+import net.mm2d.player.domain.Entry
+import net.mm2d.player.domain.Result
+import net.mm2d.player.domain.Server
 
 /**
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)

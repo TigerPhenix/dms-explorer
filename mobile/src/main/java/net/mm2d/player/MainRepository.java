@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2018 大前良介 (OHMAE Ryosuke)
+ * Copyright (c) 2019 大前良介 (OHMAE Ryosuke)
  *
  * This software is released under the MIT License.
  * http://opensource.org/licenses/MIT
  */
 
-package net.mm2d.dmsexplorer.core;
+package net.mm2d.player;
 
 import net.mm2d.android.upnp.AvControlPointManager;
-import net.mm2d.dmsexplorer.core.domain.ServerRepositories;
-import net.mm2d.dmsexplorer.core.infrastructure.dlna.DlnaServerRepository;
+import net.mm2d.player.domain.ServerRepositories;
+import net.mm2d.player.infrastructure.dlna.DlnaServerRepository;
 import net.mm2d.log.Logger;
 
 /**

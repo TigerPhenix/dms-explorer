@@ -1,9 +1,9 @@
-package net.mm2d.dmsexplorer.core.infrastructure.dlna
+package net.mm2d.player.infrastructure.dlna
 
 import android.annotation.SuppressLint
 import io.reactivex.Observable
-import net.mm2d.dmsexplorer.core.domain.Entry
-import net.mm2d.dmsexplorer.core.domain.PlayList
+import net.mm2d.player.domain.Entry
+import net.mm2d.player.domain.PlayList
 import java.util.*
 
 /**

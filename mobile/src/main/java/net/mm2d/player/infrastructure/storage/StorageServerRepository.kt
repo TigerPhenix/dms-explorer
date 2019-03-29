@@ -5,12 +5,12 @@
  * http://opensource.org/licenses/MIT
  */
 
-package net.mm2d.dmsexplorer.core.infrastructure.storage
+package net.mm2d.player.infrastructure.storage
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import net.mm2d.dmsexplorer.core.domain.DiscoveryEvent
-import net.mm2d.dmsexplorer.core.domain.ServerRepository
+import net.mm2d.player.domain.DiscoveryEvent
+import net.mm2d.player.domain.ServerRepository
 
 /**
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)
