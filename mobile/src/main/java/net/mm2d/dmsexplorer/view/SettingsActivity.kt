@@ -20,7 +20,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.SwitchPreference
 import net.mm2d.android.util.LaunchUtils
 import net.mm2d.dmsexplorer.BuildConfig
 import net.mm2d.dmsexplorer.Const
@@ -96,25 +96,19 @@ class SettingsActivity : PreferenceActivityCompat() {
     }
 
     class PlaybackPreferenceFragment : PreferenceFragmentBase() {
-        override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?
-        ) {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.pref_playback)
         }
     }
 
     class FunctionPreferenceFragment : PreferenceFragmentBase() {
-        override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?
-        ) {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.pref_function)
             setUpCustomTabs()
         }
 
         private fun setUpCustomTabs() {
-            val customTabs = findPreference(Key.USE_CUSTOM_TABS.name) as SwitchPreferenceCompat
+            val customTabs = findPreference(Key.USE_CUSTOM_TABS.name) as SwitchPreference
             customTabs.setOnPreferenceChangeListener { _, newValue ->
                 if (newValue is Boolean) {
                     Repository.get().openUriModel.setUseCustomTabs(newValue)
@@ -134,10 +128,7 @@ class SettingsActivity : PreferenceActivityCompat() {
     class ViewPreferenceFragment : PreferenceFragmentBase() {
         private var setFromCode: Boolean = false
 
-        override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?
-        ) {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             val context = activity
             val finishNotifier = EventRouter.createFinishNotifier()
             addPreferencesFromResource(R.xml.pref_view)
@@ -146,12 +137,12 @@ class SettingsActivity : PreferenceActivityCompat() {
                     setFromCode = false
                     return@setOnPreferenceChangeListener true
                 }
-                val switchPreference = preference as SwitchPreferenceCompat
+                val switchPreference = preference as SwitchPreference
                 val checked = switchPreference.isChecked
                 AlertDialog.Builder(context!!)
                     .setTitle(R.string.dialog_title_change_theme)
                     .setMessage(R.string.dialog_message_change_theme)
-                    .setPositiveButton(R.string.ok) { dialog, which ->
+                    .setPositiveButton(R.string.ok) { _, _ ->
                         setFromCode = true
                         switchPreference.isChecked = !checked
                         finishNotifier.send()
@@ -167,10 +158,7 @@ class SettingsActivity : PreferenceActivityCompat() {
     class ExpertPreferenceFragment : PreferenceFragmentBase() {
         private lateinit var orientationSettingsNotifier: EventNotifier
 
-        override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?
-        ) {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             orientationSettingsNotifier = EventRouter.createOrientationSettingsNotifier()
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity!!)
             addPreferencesFromResource(R.xml.pref_expert)
@@ -222,10 +210,7 @@ class SettingsActivity : PreferenceActivityCompat() {
     }
 
     class InformationPreferenceFragment : PreferenceFragmentBase() {
-        override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?
-        ) {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             val activity = activity!!
             addPreferencesFromResource(R.xml.pref_information)
             findPreference(Key.PLAY_STORE.name).setOnPreferenceClickListener {
@@ -281,10 +266,7 @@ class SettingsActivity : PreferenceActivityCompat() {
             return !CustomTabsHelper.packageNameToBind.isNullOrEmpty()
         }
 
-        private fun openUrl(
-            context: Context,
-            url: String
-        ) {
+        private fun openUrl(context: Context, url: String) {
             Repository.get().openUriModel.openUri(context, url)
         }
     }
