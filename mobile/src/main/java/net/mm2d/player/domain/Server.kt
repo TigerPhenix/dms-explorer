@@ -11,9 +11,9 @@ package net.mm2d.player.domain
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)
  */
 interface Server {
-    fun getName(): String
-
     val isAvailable: Boolean
+
+    fun getName(): String
 
     fun getRoot(): Entry
 
