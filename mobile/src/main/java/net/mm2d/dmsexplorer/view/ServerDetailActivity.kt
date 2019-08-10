@@ -23,6 +23,7 @@ import net.mm2d.dmsexplorer.Repository
 import net.mm2d.dmsexplorer.databinding.ServerDetailFragmentBinding
 import net.mm2d.dmsexplorer.settings.Settings
 import net.mm2d.dmsexplorer.view.base.BaseActivity
+import kotlin.math.sqrt
 
 /**
  * メディアサーバの詳細情報を表示するActivity。
@@ -83,7 +84,7 @@ class ServerDetailActivity : BaseActivity(true) {
         val cy = background.height - iconCenter
         ViewAnimationUtils.createCircularReveal(
             background,
-            cx.toInt(), cy.toInt(), iconRadius, Math.sqrt((cx * cx + cy * cy).toDouble()).toFloat()
+            cx.toInt(), cy.toInt(), iconRadius, sqrt((cx * cx + cy * cy).toDouble()).toFloat()
         ).start()
     }
 
@@ -96,8 +97,7 @@ class ServerDetailActivity : BaseActivity(true) {
          * @param context コンテキスト
          * @return このActivityを起動するためのIntent
          */
-        fun makeIntent(context: Context): Intent {
-            return Intent(context, ServerDetailActivity::class.java)
-        }
+        fun makeIntent(context: Context): Intent =
+            Intent(context, ServerDetailActivity::class.java)
     }
 }

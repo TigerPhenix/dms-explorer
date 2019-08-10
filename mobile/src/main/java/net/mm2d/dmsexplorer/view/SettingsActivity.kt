@@ -47,7 +47,7 @@ import java.util.*
 class SettingsActivity : PreferenceActivityCompat() {
     private lateinit var finishObserver: EventObserver
 
-    override fun onBuildHeaders(target: List<Header>) {
+    override fun onBuildHeaders(target: MutableList<Header>) {
         loadHeadersFromResource(R.xml.pref_headers, target)
         Settings.get()
             .themeParams
@@ -74,18 +74,15 @@ class SettingsActivity : PreferenceActivityCompat() {
         finishObserver.unregister()
     }
 
-    override fun onIsMultiPane(): Boolean {
-        return isXLargeTablet(this)
-    }
+    override fun onIsMultiPane(): Boolean = isXLargeTablet(this)
 
-    override fun isValidFragment(fragmentName: String?): Boolean {
-        return (PreferenceFragmentCompat::class.java.name == fragmentName
+    override fun isValidFragment(fragmentName: String?): Boolean =
+        (PreferenceFragmentCompat::class.java.name == fragmentName
                 || PlaybackPreferenceFragment::class.java.name == fragmentName
                 || FunctionPreferenceFragment::class.java.name == fragmentName
                 || ViewPreferenceFragment::class.java.name == fragmentName
                 || ExpertPreferenceFragment::class.java.name == fragmentName
                 || InformationPreferenceFragment::class.java.name == fragmentName)
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
@@ -249,22 +246,17 @@ class SettingsActivity : PreferenceActivityCompat() {
          * @param context コンテキスト
          * @return このActivityを起動するためのIntent
          */
-        fun makeIntent(context: Context): Intent {
-            return Intent(context, SettingsActivity::class.java)
-        }
+        fun makeIntent(context: Context): Intent = Intent(context, SettingsActivity::class.java)
 
-        @JvmStatic
         fun start(context: Context) {
             context.startActivity(makeIntent(context))
         }
 
-        private fun isXLargeTablet(context: Context): Boolean {
-            return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
-        }
+        private fun isXLargeTablet(context: Context): Boolean =
+            context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
 
-        private fun canUseChromeCustomTabs(): Boolean {
-            return !CustomTabsHelper.packageNameToBind.isNullOrEmpty()
-        }
+        private fun canUseChromeCustomTabs(): Boolean =
+            !CustomTabsHelper.packageNameToBind.isNullOrEmpty()
 
         private fun openUrl(context: Context, url: String) {
             Repository.get().openUriModel.openUri(context, url)

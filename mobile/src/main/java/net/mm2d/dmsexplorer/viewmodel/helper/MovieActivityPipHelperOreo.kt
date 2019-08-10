@@ -25,7 +25,6 @@ import net.mm2d.dmsexplorer.Const
 import net.mm2d.dmsexplorer.R
 import net.mm2d.dmsexplorer.viewmodel.ControlPanelModel
 import net.mm2d.log.Logger
-import java.util.*
 
 /**
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)
@@ -62,11 +61,20 @@ internal class MovieActivityPipHelperOreo(
 
     private fun isPictureInPictureAllowed(): Boolean {
         val appOps = activity.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-        val uid = android.os.Process.myUid()
-        val packageName = activity.packageName
         return try {
-            appOps.checkOpNoThrow(AppOpsManager.OPSTR_PICTURE_IN_PICTURE, uid, packageName) ==
-                    AppOpsManager.MODE_ALLOWED
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                appOps.unsafeCheckOpNoThrow(
+                    AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
+                    android.os.Process.myUid(),
+                    activity.packageName
+                )
+            } else {
+                appOps.checkOpNoThrow(
+                    AppOpsManager.OPSTR_PICTURE_IN_PICTURE,
+                    android.os.Process.myUid(),
+                    activity.packageName
+                )
+            } == AppOpsManager.MODE_ALLOWED
         } catch (ignored: Exception) {
             false
         }
@@ -76,12 +84,10 @@ internal class MovieActivityPipHelperOreo(
         activity.registerReceiver(controlReceiver, makeIntentFilter())
     }
 
-    private fun makeIntentFilter(): IntentFilter {
-        return IntentFilter().also {
-            it.addAction(Const.ACTION_PLAY)
-            it.addAction(Const.ACTION_NEXT)
-            it.addAction(Const.ACTION_PREV)
-        }
+    private fun makeIntentFilter(): IntentFilter = IntentFilter().also {
+        it.addAction(Const.ACTION_PLAY)
+        it.addAction(Const.ACTION_NEXT)
+        it.addAction(Const.ACTION_PREV)
     }
 
     override fun unregister() {
@@ -113,10 +119,8 @@ internal class MovieActivityPipHelperOreo(
         }
     }
 
-    private fun makeViewRect(v: View): Rect {
-        val rect = Rect()
-        v.getGlobalVisibleRect(rect)
-        return rect
+    private fun makeViewRect(v: View): Rect = Rect().also {
+        v.getGlobalVisibleRect(it)
     }
 
     private fun makeActions(isPlaying: Boolean): List<RemoteAction>? {
@@ -125,78 +129,62 @@ internal class MovieActivityPipHelperOreo(
             return null
         }
         return if (max >= 3) {
-            Arrays.asList(
-                makePreviousAction(),
-                makePlayAction(isPlaying),
-                makeNextAction()
-            )
+            listOf(makePreviousAction(), makePlayAction(isPlaying), makeNextAction())
         } else listOf(makePlayAction(isPlaying))
     }
 
-    private fun makePlayAction(isPlaying: Boolean): RemoteAction {
-        return RemoteAction(
-            makeIcon(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-            getString(R.string.action_play_title),
-            getString(R.string.action_play_description),
-            makePlayPendingIntent(activity)
-        )
-    }
+    private fun makePlayAction(isPlaying: Boolean): RemoteAction = RemoteAction(
+        makeIcon(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+        getString(R.string.action_play_title),
+        getString(R.string.action_play_description),
+        makePlayPendingIntent(activity)
+    )
 
-    private fun makeNextAction(): RemoteAction {
-        return RemoteAction(
-            makeIcon(R.drawable.ic_skip_next),
-            getString(R.string.action_next_title),
-            getString(R.string.action_next_description),
-            makeNextPendingIntent(activity)
-        )
-    }
+    private fun makeNextAction(): RemoteAction = RemoteAction(
+        makeIcon(R.drawable.ic_skip_next),
+        getString(R.string.action_next_title),
+        getString(R.string.action_next_description),
+        makeNextPendingIntent(activity)
+    )
 
-    private fun makePreviousAction(): RemoteAction {
-        return RemoteAction(
-            makeIcon(R.drawable.ic_skip_previous),
-            getString(R.string.action_previous_title),
-            getString(R.string.action_previous_description),
-            makePreviousPendingIntent(activity)
-        )
-    }
+    private fun makePreviousAction(): RemoteAction = RemoteAction(
+        makeIcon(R.drawable.ic_skip_previous),
+        getString(R.string.action_previous_title),
+        getString(R.string.action_previous_description),
+        makePreviousPendingIntent(activity)
+    )
 
-    private fun getString(@StringRes resId: Int): String {
-        return activity.resources.getText(resId, "").toString()
-    }
+    private fun getString(@StringRes resId: Int): String =
+        activity.resources.getText(resId, "").toString()
 
-    private fun makeIcon(@DrawableRes resId: Int): Icon {
-        return Icon.createWithResource(activity, resId)
-    }
+    private fun makeIcon(@DrawableRes resId: Int): Icon = Icon.createWithResource(activity, resId)
 
     companion object {
         private const val ACTION_PICTURE_IN_PICTURE_SETTINGS =
             "android.settings.PICTURE_IN_PICTURE_SETTINGS"
 
-        private fun makePlayPendingIntent(context: Context): PendingIntent {
-            return PendingIntent.getBroadcast(
+        private fun makePlayPendingIntent(context: Context): PendingIntent =
+            PendingIntent.getBroadcast(
                 context,
                 Const.REQUEST_CODE_ACTION_PLAY,
                 Intent(Const.ACTION_PLAY),
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
-        }
 
-        private fun makeNextPendingIntent(context: Context): PendingIntent {
-            return PendingIntent.getBroadcast(
+        private fun makeNextPendingIntent(context: Context): PendingIntent =
+            PendingIntent.getBroadcast(
                 context,
                 Const.REQUEST_CODE_ACTION_NEXT,
                 Intent(Const.ACTION_NEXT),
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
-        }
 
-        private fun makePreviousPendingIntent(context: Context): PendingIntent {
-            return PendingIntent.getBroadcast(
+        private fun makePreviousPendingIntent(context: Context): PendingIntent =
+            PendingIntent.getBroadcast(
                 context,
                 Const.REQUEST_CODE_ACTION_PREVIOUS,
                 Intent(Const.ACTION_PREV),
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
-        }
     }
 }

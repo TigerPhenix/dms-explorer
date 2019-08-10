@@ -7,14 +7,11 @@
 
 package net.mm2d.android.upnp.cds
 
-import android.text.TextUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
-import io.reactivex.schedulers.Schedulers
 import net.mm2d.android.upnp.DeviceWrapper
-import net.mm2d.android.util.TextParseUtils
 import net.mm2d.log.Logger
 import net.mm2d.upnp.Action
 import net.mm2d.upnp.Device
@@ -64,27 +61,18 @@ internal constructor(device: Device) : DeviceWrapper(device) {
         cdsService.unsubscribe(null)
     }
 
-    fun hasDestroyObject(): Boolean {
-        return destroyObject != null
-    }
+    fun hasDestroyObject(): Boolean = destroyObject != null
 
-    fun destroyObject(objectId: String): Single<Int> {
-        return if (destroyObject == null) {
-            Single.never()
-        } else Single.create { emitter: SingleEmitter<Int> ->
-            val result =
-                destroyObject.invokeSync(Collections.singletonMap(OBJECT_ID, objectId), false)
-            val errorDescription = result[Action.ERROR_DESCRIPTION_KEY]
-            if (!TextUtils.isEmpty(errorDescription)) {
-                Logger.e { errorDescription }
-            }
-            emitter.onSuccess(
-                TextParseUtils.parseIntSafely(
-                    result[Action.ERROR_CODE_KEY],
-                    NO_ERROR
-                )
-            )
-        }.subscribeOn(Schedulers.io())
+    fun destroyObject(objectId: String): Single<Int> = if (destroyObject == null) {
+        Single.never()
+    } else Single.create { emitter: SingleEmitter<Int> ->
+        val result =
+            destroyObject.invokeSync(Collections.singletonMap(OBJECT_ID, objectId), false)
+        val errorDescription = result[Action.ERROR_DESCRIPTION_KEY]
+        if (!errorDescription.isNullOrEmpty()) {
+            Logger.e { errorDescription }
+        }
+        emitter.onSuccess(result[Action.ERROR_CODE_KEY]?.toIntOrNull() ?: NO_ERROR)
     }
 
     /**
@@ -99,9 +87,7 @@ internal constructor(device: Device) : DeviceWrapper(device) {
         objectId: String,
         startingIndex: Int,
         requestedCount: Int
-    ): Observable<CdsObject> {
-        return browse(objectId, "*", null, startingIndex, requestedCount)
-    }
+    ): Observable<CdsObject> = browse(objectId, "*", null, startingIndex, requestedCount)
 
     /**
      * Browseを実行する。
@@ -113,7 +99,6 @@ internal constructor(device: Device) : DeviceWrapper(device) {
      * @param requestedCount requestedCount
      * @return 結果
      */
-    @JvmOverloads
     fun browse(
         objectId: String,
         filter: String? = "*",
@@ -131,7 +116,7 @@ internal constructor(device: Device) : DeviceWrapper(device) {
             var start = startingIndex
             while (!emitter.isDisposed) {
                 argument.setStartIndex(start)
-                    .setRequestCount(Math.min(request - start, REQUEST_MAX))
+                    .setRequestCount(minOf(request - start, REQUEST_MAX))
                 val response = BrowseResponse(browse.invokeSync(argument.get(), false))
                 val number = response.numberReturned
                 val total = response.totalMatches
@@ -151,9 +136,7 @@ internal constructor(device: Device) : DeviceWrapper(device) {
                 }
             }
             emitter.onComplete()
-        }
-            .flatMap<CdsObject> { Observable.fromIterable(it) }
-            .subscribeOn(Schedulers.io())
+        }.flatMap { Observable.fromIterable(it) }
     }
 
     /**
@@ -163,11 +146,10 @@ internal constructor(device: Device) : DeviceWrapper(device) {
      * @param filter   filter
      * @return 結果
      */
-    @JvmOverloads
     fun browseMetadata(
         objectId: String,
         filter: String? = "*"
-    ): Single<CdsObject> {
+    ): Single<CdsObject> = Single.create { emitter: SingleEmitter<CdsObject> ->
         val argument = BrowseArgument()
             .setObjectId(objectId)
             .setBrowseMetadata()
@@ -175,15 +157,13 @@ internal constructor(device: Device) : DeviceWrapper(device) {
             .setSortCriteria("")
             .setStartIndex(0)
             .setRequestCount(0)
-        return Single.create { emitter: SingleEmitter<CdsObject> ->
-            val response = BrowseResponse(browse.invokeSync(argument.get(), false))
-            val result = CdsObjectFactory.parseMetadata(udn, response.result)
-            if (result == null || response.numberReturned < 0 || response.totalMatches < 0) {
-                emitter.onError(IllegalStateException())
-                return@create
-            }
-            emitter.onSuccess(result)
-        }.subscribeOn(Schedulers.io())
+        val response = BrowseResponse(browse.invokeSync(argument.get(), false))
+        val result = CdsObjectFactory.parseMetadata(udn, response.result)
+        if (result == null || response.numberReturned < 0 || response.totalMatches < 0) {
+            emitter.onError(IllegalStateException())
+            return@create
+        }
+        emitter.onSuccess(result)
     }
 
     companion object {

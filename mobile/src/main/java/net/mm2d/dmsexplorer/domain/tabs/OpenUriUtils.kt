@@ -20,7 +20,6 @@ object OpenUriUtils {
     private var defaultBrowserPackage: String? = null
     private var browserPackages: Set<String>? = null
 
-    @JvmOverloads
     internal fun getBrowserPackages(
         context: Context,
         update: Boolean = false
@@ -46,7 +45,6 @@ object OpenUriUtils {
         return activities.map { it.activityInfo.packageName }.toSet()
     }
 
-    @JvmOverloads
     internal fun getDefaultBrowserPackage(
         context: Context,
         update: Boolean = false
@@ -79,11 +77,8 @@ object OpenUriUtils {
         return intent
     }
 
-    private fun makeBrowserTestIntent(): Intent {
-        return makeBrowseIntent("http://www.example.com/")
-    }
+    private fun makeBrowserTestIntent(): Intent = makeBrowseIntent("http://www.example.com/")
 
-    @JvmStatic
     fun hasDefaultAppOtherThanBrowser(
         context: Context,
         uri: String

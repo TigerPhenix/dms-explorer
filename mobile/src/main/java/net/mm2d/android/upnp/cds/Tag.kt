@@ -36,9 +36,7 @@ class Tag(
      * @param name 属性名
      * @return 属性値、見つからない場合null
      */
-    fun getAttribute(name: String?): String? {
-        return attributes[name]
-    }
+    fun getAttribute(name: String?): String? = attributes[name]
 
     override fun toString(): String {
         val sb = StringBuilder()
@@ -86,7 +84,6 @@ class Tag(
          * @param element タグ情報
          * @param root    タグがitem/containerのときtrue
          */
-        @JvmOverloads
         fun create(element: Element, root: Boolean = false): Tag =
             create(element, if (root) "" else element.textContent)
 
