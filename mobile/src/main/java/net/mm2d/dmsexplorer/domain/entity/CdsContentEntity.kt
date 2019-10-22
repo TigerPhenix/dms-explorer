@@ -13,6 +13,7 @@ import net.mm2d.dmsexplorer.util.StringJoiner
 class CdsContentEntity(
     override val cdsObject: CdsObject
 ) : ContentEntity {
+    override val id: String = cdsObject.objectId
     private var selectedRes: Tag? = null
     override val type: ContentType
     override var uri: Uri? = null
@@ -21,6 +22,10 @@ class CdsContentEntity(
         private set
     override val name: String
         get() = cdsObject.title
+    override val date: Long =
+        cdsObject.getDateValue(CdsObject.UPNP_SCHEDULED_START_TIME)?.time ?: cdsObject.getDateValue(
+            CdsObject.DC_DATE
+        )?.time ?: 0L
 
     override val description: String
         get() {

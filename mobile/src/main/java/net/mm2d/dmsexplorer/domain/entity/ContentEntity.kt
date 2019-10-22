@@ -13,9 +13,11 @@ import android.net.Uri
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)
  */
 interface ContentEntity {
+    val id: String
     val cdsObject: Any
     val name: String
     val description: String
+    val date: Long
     val artUri: Uri
     val iconUri: Uri
     val type: ContentType

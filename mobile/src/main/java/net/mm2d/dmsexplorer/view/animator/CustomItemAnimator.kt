@@ -218,6 +218,7 @@ class CustomItemAnimator(context: Context) : SimpleItemAnimator() {
 
                 override fun onAnimationCancel(animator: Animator) {
                     view.alpha = 1f
+                    view.translationY = 0f
                 }
 
                 override fun onAnimationEnd(animator: Animator) {
@@ -509,16 +510,16 @@ class CustomItemAnimator(context: Context) : SimpleItemAnimator() {
 
     override fun isRunning(): Boolean {
         return (pendingAdditions.isNotEmpty()
-                || pendingChanges.isNotEmpty()
-                || pendingMoves.isNotEmpty()
-                || pendingRemovals.isNotEmpty()
-                || moveAnimations.isNotEmpty()
-                || removeAnimations.isNotEmpty()
-                || addAnimations.isNotEmpty()
-                || changeAnimations.isNotEmpty()
-                || movesList.isNotEmpty()
-                || additionsList.isNotEmpty()
-                || changesList.isNotEmpty())
+            || pendingChanges.isNotEmpty()
+            || pendingMoves.isNotEmpty()
+            || pendingRemovals.isNotEmpty()
+            || moveAnimations.isNotEmpty()
+            || removeAnimations.isNotEmpty()
+            || addAnimations.isNotEmpty()
+            || changeAnimations.isNotEmpty()
+            || movesList.isNotEmpty()
+            || additionsList.isNotEmpty()
+            || changesList.isNotEmpty())
     }
 
     /**

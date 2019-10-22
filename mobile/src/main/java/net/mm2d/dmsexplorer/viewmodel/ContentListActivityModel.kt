@@ -7,13 +7,14 @@
 
 package net.mm2d.dmsexplorer.viewmodel
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.ItemAnimator
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -30,12 +31,13 @@ import net.mm2d.dmsexplorer.util.AttrUtils
 import net.mm2d.dmsexplorer.util.FeatureUtils
 import net.mm2d.dmsexplorer.view.adapter.ContentListAdapter
 import net.mm2d.dmsexplorer.view.animator.CustomItemAnimator
+import net.mm2d.dmsexplorer.view.dialog.SortDialog
 
 /**
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)
  */
 class ContentListActivityModel(
-    context: Context,
+    private val activity: FragmentActivity,
     repository: Repository,
     private val cdsSelectListener: CdsSelectListener,
     private val twoPane: Boolean
@@ -43,9 +45,9 @@ class ContentListActivityModel(
     val refreshColors =
         intArrayOf(R.color.progress1, R.color.progress2, R.color.progress3, R.color.progress4)
     val progressBackground: Int =
-        AttrUtils.resolveColor(context, R.attr.themeProgressBackground, Color.BLACK)
+        AttrUtils.resolveColor(activity, R.attr.themeProgressBackground, Color.BLACK)
     val distanceToTriggerSync: Int =
-        context.resources.getDimensionPixelOffset(R.dimen.distance_to_trigger_sync)
+        activity.resources.getDimensionPixelOffset(R.dimen.distance_to_trigger_sync)
     val onRefreshListener: OnRefreshListener
     val itemAnimator: ItemAnimator
     val cdsListLayoutManager: LayoutManager
@@ -72,9 +74,6 @@ class ContentListActivityModel(
     private val handler = Handler(Looper.getMainLooper())
     private val mediaServerModel: MediaServerModel
     private val settings: Settings = Settings.get()
-    private var updateList: Runnable = Runnable { }
-    private var updateTime: Long = 0
-    private var timerResetLatch: Boolean = false
 
     val isItemSelected: Boolean
         get() {
@@ -110,14 +109,14 @@ class ContentListActivityModel(
         val model = repository.mediaServerModel ?: throw IllegalStateException()
         mediaServerModel = model
         mediaServerModel.setExploreListener(this)
-        contentListAdapter = ContentListAdapter(context).also {
+        contentListAdapter = ContentListAdapter(activity).also {
             it.setOnItemClickListener(::onItemClick)
             it.setOnItemLongClickListener(::onItemLongClick)
         }
 
-        focusable = !FeatureUtils.hasTouchScreen(context)
-        cdsListLayoutManager = LinearLayoutManager(context)
-        itemAnimator = CustomItemAnimator(context)
+        focusable = !FeatureUtils.hasTouchScreen(activity)
+        cdsListLayoutManager = LinearLayoutManager(activity)
+        itemAnimator = CustomItemAnimator(activity)
         title = mediaServerModel.title
         onRefreshListener = OnRefreshListener { mediaServerModel.reload() }
         val server = mediaServerModel.mediaServer
@@ -179,6 +178,10 @@ class ContentListActivityModel(
         }
     }
 
+    fun onSortMenuClicked() {
+        SortDialog.show(activity)
+    }
+
     fun onBackPressed(): Boolean {
         cdsSelectListener.onLostSelection()
         return mediaServerModel.exitToParent()
@@ -203,56 +206,34 @@ class ContentListActivityModel(
         subtitle = "[$size] ${mediaServerModel.path}"
     }
 
-    private fun calculateDelay(
-        before: Int,
-        after: Int
-    ): Long {
-        if (before > after) {
-            return 0
-        }
-        val diff = System.currentTimeMillis() - updateTime
-        if (before == 0) {
-            return if (after < FIRST_COUNT && diff < FIRST_INTERVAL) {
-                FIRST_INTERVAL - diff
-            } else 0
-        }
-        return if (after - before < SECOND_COUNT && diff < SECOND_INTERVAL) {
-            SECOND_INTERVAL - diff
-        } else 0
+    private val scrollPositionTask = Runnable {
+        scrollPosition = contentListAdapter.list.indexOf(mediaServerModel.selectedEntity)
     }
 
     private fun updateList(list: List<ContentEntity>) {
-        val beforeSize = contentListAdapter.itemCount
-        val afterSize = list.size
-        if (beforeSize == afterSize) {
-            return
-        }
-        if (timerResetLatch && beforeSize == 0 && afterSize == 1) {
-            updateTime = System.currentTimeMillis()
-        }
-        timerResetLatch = afterSize == 0
-        handler.removeCallbacks(updateList)
-        val delay = calculateDelay(beforeSize, afterSize)
-        if (delay > 0) {
-            updateList = Runnable { updateList(list) }
-            handler.postDelayed(updateList, delay)
-            return
-        }
-        updateTime = System.currentTimeMillis()
         val entity = mediaServerModel.selectedEntity
-        contentListAdapter.clear()
-        contentListAdapter.addAll(list)
+        val oldList = contentListAdapter.list
+        val diff = DiffUtil.calculateDiff(DiffCallback(oldList, list), true)
+        contentListAdapter.list = list
         contentListAdapter.setSelectedEntity(entity)
-        if (beforeSize < afterSize) {
-            contentListAdapter.notifyItemRangeInserted(beforeSize, afterSize - beforeSize)
-        } else {
-            contentListAdapter.notifyDataSetChanged()
-        }
-        if (beforeSize == 0 && entity != null) {
-            scrollPosition = list.indexOf(entity)
-        } else {
-            _scrollPosition = INVALID_POSITION
-        }
+        diff.dispatchUpdatesTo(contentListAdapter)
+        handler.removeCallbacks(scrollPositionTask)
+        handler.postDelayed(scrollPositionTask, SCROLL_POSITION_DELAY)
+    }
+
+    private class DiffCallback(
+        private val old: List<ContentEntity>,
+        private val new: List<ContentEntity>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = old.size
+
+        override fun getNewListSize(): Int = new.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            old[oldItemPosition].id == new[newItemPosition].id
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            old[oldItemPosition].name == new[newItemPosition].name
     }
 
     fun terminate() {
@@ -262,9 +243,6 @@ class ContentListActivityModel(
 
     companion object {
         private const val INVALID_POSITION = -1
-        private const val FIRST_COUNT = 20
-        private const val SECOND_COUNT = 300
-        private const val FIRST_INTERVAL: Long = 50
-        private const val SECOND_INTERVAL: Long = 300
+        private const val SCROLL_POSITION_DELAY = 200L
     }
 }
