@@ -20,7 +20,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.os.Build
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -77,10 +76,7 @@ class CustomItemAnimator(context: Context) : SimpleItemAnimator() {
 
     init {
         val density = context.resources.displayMetrics.density
-        val translationY = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            ADDING_TRANSLATION_Y
-        else
-            ADDING_TRANSLATION_Y_KITKAT
+        val translationY = ADDING_TRANSLATION_Y
         addingTranslationY = (translationY * density + 0.5f).toInt()
     }
 
@@ -482,21 +478,13 @@ class CustomItemAnimator(context: Context) : SimpleItemAnimator() {
         }
         // animations should be ended by the cancel above.
         //noinspection PointlessBooleanExpression,ConstantConditions
-        if (removeAnimations.remove(item) && DEBUG) {
-            throw IllegalStateException("after animation is cancelled, item should not be in removeAnimations list")
-        }
+        check(DEBUG && !(removeAnimations.remove(item))) { "after animation is cancelled, item should not be in removeAnimations list" }
         //noinspection PointlessBooleanExpression,ConstantConditions
-        if (addAnimations.remove(item) && DEBUG) {
-            throw IllegalStateException("after animation is cancelled, item should not be in addAnimations list")
-        }
+        check(DEBUG && !(addAnimations.remove(item))) { "after animation is cancelled, item should not be in addAnimations list" }
         //noinspection PointlessBooleanExpression,ConstantConditions
-        if (changeAnimations.remove(item) && DEBUG) {
-            throw IllegalStateException("after animation is cancelled, item should not be in changeAnimations list")
-        }
+        check(DEBUG && !(changeAnimations.remove(item))) { "after animation is cancelled, item should not be in changeAnimations list" }
         //noinspection PointlessBooleanExpression,ConstantConditions
-        if (moveAnimations.remove(item) && DEBUG) {
-            throw IllegalStateException("after animation is cancelled, item should not be in moveAnimations list")
-        }
+        check(DEBUG && !(moveAnimations.remove(item))) { "after animation is cancelled, item should not be in moveAnimations list" }
         dispatchFinishedWhenDone()
     }
 
@@ -643,7 +631,6 @@ class CustomItemAnimator(context: Context) : SimpleItemAnimator() {
         private const val ADDING_ANIMATION_DELAY = 16L
         private const val ADDING_ANIMATION_DELAY_MAX = 500L
         private const val ADDING_TRANSLATION_Y = 200
-        private const val ADDING_TRANSLATION_Y_KITKAT = 50
 
         private var sDefaultInterpolator: TimeInterpolator? = null
     }

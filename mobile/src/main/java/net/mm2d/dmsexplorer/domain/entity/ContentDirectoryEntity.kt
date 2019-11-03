@@ -64,7 +64,7 @@ class ContentDirectoryEntity private constructor(
             return null
         }
         _selectedEntity = entity
-        val cdsObject = entity.cdsObject as CdsObject
+        val cdsObject = entity.rawEntity as CdsObject
         return ContentDirectoryEntity(cdsObject.objectId, cdsObject.title)
     }
 
@@ -103,14 +103,8 @@ class ContentDirectoryEntity private constructor(
         val isAscending = settings.isAscendingSortOrder
         sortedList = when (settings.sortKey) {
             NONE -> list.toList()
-            NAME -> {
-                if (isAscending) list.sortedBy { it.name }
-                else list.sortedByDescending { it.name }
-            }
-            DATE -> {
-                if (isAscending) list.sortedBy { it.date }
-                else list.sortedByDescending { it.date }
-            }
+            NAME -> list.sortedByText(isAscending) { it.name }
+            DATE -> list.sortedBy(isAscending) { it.date }
         }
     }
 

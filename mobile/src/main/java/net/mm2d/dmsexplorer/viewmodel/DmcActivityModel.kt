@@ -15,9 +15,9 @@ import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.databinding.library.baseAdapters.BR
 import net.mm2d.android.util.AribUtils
 import net.mm2d.android.util.Toaster
-import net.mm2d.dmsexplorer.BR
 import net.mm2d.dmsexplorer.R
 import net.mm2d.dmsexplorer.Repository
 import net.mm2d.dmsexplorer.domain.entity.ContentEntity
@@ -127,9 +127,7 @@ class DmcActivityModel(
         }
 
     init {
-        if (targetModel.uri === Uri.EMPTY) {
-            throw IllegalStateException()
-        }
+        check(!(targetModel.uri === Uri.EMPTY))
         rendererModel.setStatusListener(this)
         val entity = targetModel.contentEntity
         title = AribUtils.toDisplayableString(entity.name)

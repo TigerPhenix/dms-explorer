@@ -76,7 +76,7 @@ class MovieActivityModel(
     var repeatIconId: Int = repeatMode.iconId
         set(@DrawableRes id) {
             field = id
-            notifyPropertyChanged(net.mm2d.dmsexplorer.BR.repeatIconId)
+            notifyPropertyChanged(BR.repeatIconId)
         }
     private val isTooShortPlayTime: Boolean
         get() {
@@ -96,9 +96,7 @@ class MovieActivityModel(
         movieActivityPipHelper.register()
         muteAlertHelper = MuteAlertHelper(activity)
         val targetModel = repository.playbackTargetModel
-        if (targetModel == null || targetModel.uri === Uri.EMPTY) {
-            throw IllegalStateException()
-        }
+        check(!(targetModel == null || targetModel.uri === Uri.EMPTY))
         updateTargetModel()
     }
 
