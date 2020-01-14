@@ -101,7 +101,7 @@ dependencies {
 
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.google.firebase:firebase-core:17.2.1'
-    implementation 'com.google.firebase:firebase-perf:19.0.1'
+    implementation 'com.google.firebase:firebase-perf:19.0.4'
 
     testImplementation 'junit:junit:4.13'
     testImplementation "io.mockk:mockk:1.9.3"
