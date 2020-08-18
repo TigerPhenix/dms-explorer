@@ -9,6 +9,8 @@ plugins {
     id("kotlin-kapt")
     jacoco
     id("com.github.ben-manes.versions")
+    id("com.google.firebase.crashlytics")
+    id("com.google.firebase.firebase-perf")
 }
 
 val applicationName = "DmsExplorer"
@@ -56,7 +58,7 @@ android {
     applicationVariants.all {
         if (buildType.name == "release") {
             outputs.all {
-                (this as BaseVariantOutputImpl).outputFileName = "${applicationName}-${versionName}.apk"
+                (this as BaseVariantOutputImpl).outputFileName = "${applicationName}-${versionName}-google-play.apk"
             }
         }
     }
@@ -106,6 +108,11 @@ dependencies {
     debugImplementation("com.facebook.stetho:stetho:1.5.1")
     debugImplementation("com.facebook.stetho:stetho-okhttp3:1.5.1")
 
+    implementation("com.google.firebase:firebase-core:17.5.0")
+    implementation("com.google.firebase:firebase-perf:19.0.8")
+    implementation("com.google.firebase:firebase-crashlytics:17.2.1")
+    implementation("com.google.firebase:firebase-analytics:17.5.0")
+
     testImplementation("junit:junit:4.13")
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("com.google.truth:truth:1.0.1")
@@ -138,3 +145,5 @@ fun isStable(version: String): Boolean {
 tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     rejectVersionIf { !isStable(candidate.version) }
 }
+
+apply(plugin = "com.google.gms.google-services")
