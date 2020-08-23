@@ -11,10 +11,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import net.mm2d.dmsexplorer.R
-import net.mm2d.dmsexplorer.settings.Settings
+import net.mm2d.dmsexplorer.util.UpdateChecker
 import net.mm2d.dmsexplorer.view.SettingsActivity
-import net.mm2d.dmsexplorer.view.dialog.UpdateDialog
-import net.mm2d.dmsexplorer.view.eventrouter.EventObserver
 import net.mm2d.dmsexplorer.view.eventrouter.EventRouter
 
 /**
@@ -24,22 +22,19 @@ internal class MainOptionsMenuDelegate(
     private val activity: BaseActivity,
     menuResId: Int
 ) : OptionsMenuDelegate {
-    private val settings: Settings = Settings.get()
-    private val updateAvailabilityObserver: EventObserver =
-        EventRouter.createUpdateAvailabilityObserver()
     private val menuResId = if (menuResId != 0) menuResId else R.menu.main
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        updateAvailabilityObserver.register { activity.invalidateOptionsMenu() }
+        EventRouter.observeUpdateAvailability(activity) {
+            activity.invalidateOptionsMenu()
+        }
     }
 
     override fun onDestroy() {
-        updateAvailabilityObserver.unregister()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         activity.menuInflater.inflate(menuResId, menu)
-        menu.findItem(R.id.action_update).isVisible = settings.isUpdateAvailable
         return true
     }
 
@@ -54,7 +49,7 @@ internal class MainOptionsMenuDelegate(
                 return true
             }
             R.id.action_update -> {
-                UpdateDialog.show(activity)
+                UpdateChecker.tryToUpdate(activity)
                 return true
             }
         }
@@ -62,7 +57,7 @@ internal class MainOptionsMenuDelegate(
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.action_update).isVisible = settings.isUpdateAvailable
+        menu.findItem(R.id.action_update).isVisible = EventRouter.updateAvailable()
         return true
     }
 }

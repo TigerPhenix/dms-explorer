@@ -23,7 +23,7 @@ class SettingsStorage(context: Context) {
         private var preferences: SharedPreferences? = null
 
         @Synchronized
-        internal fun get(context: Context): SharedPreferences {
+        fun get(context: Context): SharedPreferences {
             preferences?.let {
                 return it
             }
@@ -52,6 +52,17 @@ class SettingsStorage(context: Context) {
      */
     operator fun contains(key: Key): Boolean {
         return preferences.contains(key.name)
+    }
+
+    /**
+     * keyの値を削除する
+     *
+     * @param key Key
+     */
+    fun remove(key: Key) {
+        preferences.edit()
+            .remove(key.name)
+            .apply()
     }
 
     /**
